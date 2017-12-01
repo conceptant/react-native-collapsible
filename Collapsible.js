@@ -33,6 +33,7 @@ export default class Collapsible extends Component {
       contentHeight: 0,
       animating: false,
     };
+    this._handleLayoutChange = this._handleLayoutChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -128,6 +129,10 @@ export default class Collapsible extends Component {
       this._animation.stop();
     }
     this.setState({ animating: true });
+    // A hack to fix last section that is not collapsed. In this case this.state.height._value = NaN
+    if (Number.isNaN(this.state.height._value)) {
+      this.state.height.setValue(0);
+    }
     this._animation = Animated.timing(this.state.height, {
       toValue: height,
       duration,
